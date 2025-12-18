@@ -43,8 +43,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/register",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "register"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
 						},
 						"description": "Register a new user account"
 					}
@@ -82,8 +88,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/login",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "login"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
 						},
 						"description": "Login as admin user"
 					}
@@ -121,8 +133,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/login",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "login"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
 						},
 						"description": "Login as regular user John"
 					}
@@ -139,8 +157,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/me",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "me"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
 						},
 						"description": "Get details of currently logged in user"
 					}
@@ -157,8 +181,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/logout",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "logout"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
 						},
 						"description": "Logout - reminder to remove token client-side"
 					}
@@ -188,8 +218,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/change-password",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "change-password"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"change-password"
+							]
 						},
 						"description": "Change password for authenticated user"
 					}
@@ -224,8 +260,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/forgot-password",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "forgot-password"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"forgot-password"
+							]
 						},
 						"description": "Request password reset token"
 					}
@@ -246,8 +288,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/reset-password",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "reset-password"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"reset-password"
+							]
 						},
 						"description": "Reset password using token from forgot-password"
 					}
@@ -269,8 +317,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/users/profile",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "users", "profile"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile"
+							]
 						},
 						"description": "View current user's profile"
 					}
@@ -295,8 +349,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/users/profile",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "users", "profile"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile"
+							]
 						},
 						"description": "Update user's full name and email"
 					}
@@ -313,8 +373,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/users/account?password=password123",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "users", "account"],
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"account"
+							],
 							"query": [
 								{
 									"key": "password",
@@ -342,8 +408,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/admin/users",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "admin", "users"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
 						},
 						"description": "Get all users - Admin only"
 					}
@@ -368,8 +440,16 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/admin/users/2/role",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "admin", "users", "2", "role"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"users",
+								"2",
+								"role"
+							]
 						},
 						"description": "Update user's role - Admin only"
 					}
@@ -386,8 +466,16 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/admin/users/2/status",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "admin", "users", "2", "status"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"users",
+								"2",
+								"status"
+							]
 						},
 						"description": "Toggle user active status - Admin only"
 					}
@@ -430,10 +518,67 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/refresh",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "refresh"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
 						},
 						"description": "Get new access token using refresh token"
+					}
+				},
+				{
+					"name": "5.2 Login with Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.test('Response has access token', function() {",
+									"    pm.expect(jsonData.token).to.be.a('string');",
+									"});",
+									"pm.test('Response has refresh token', function() {",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');",
+									"});",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('accessToken', jsonData.token);",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login returns both access token and refresh token - demonstrates Exercise 9"
 					}
 				}
 			]
@@ -453,8 +598,13 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/customers",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "customers"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
 						},
 						"description": "Get all customers - requires authentication"
 					}
@@ -471,8 +621,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/customers/1",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "customers", "1"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"1"
+							]
 						},
 						"description": "Get customer by ID - requires authentication"
 					}
@@ -497,8 +653,13 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/customers",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "customers"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
 						},
 						"description": "Create new customer - Admin only"
 					}
@@ -523,8 +684,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/customers/1",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "customers", "1"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"1"
+							]
 						},
 						"description": "Update customer - Admin only"
 					}
@@ -541,8 +708,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/customers/1",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "customers", "1"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"1"
+							]
 						},
 						"description": "Delete customer - Admin only"
 					}
@@ -559,8 +732,13 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/customers",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "customers"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
 						},
 						"description": "Access protected endpoint without token - should return 401"
 					}
@@ -578,8 +756,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/customers/1",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "customers", "1"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"1"
+							]
 						},
 						"description": "USER trying to delete customer - should return 403"
 					}
@@ -597,8 +781,14 @@
 						],
 						"url": {
 							"raw": "{{baseUrl}}/api/admin/users",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "admin", "users"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
 						},
 						"description": "USER trying to access admin endpoint - should return 403"
 					}
@@ -619,8 +809,14 @@
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auth/login",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "auth", "login"]
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
 						},
 						"description": "Login with wrong password - should return 401"
 					}

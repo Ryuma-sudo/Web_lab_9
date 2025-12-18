@@ -99,8 +99,9 @@ public class AuthController {
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     // Create authentication for token generation
+                    // Pass user (which implements UserDetails) as principal, not username string
                     Authentication authentication = new UsernamePasswordAuthenticationToken(
-                            user.getUsername(),
+                            user, // User implements UserDetails
                             null,
                             Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())));
 
