@@ -8,23 +8,23 @@
 ## Features Implemented
 
 ### Authentication
-- ✅ User registration
-- ✅ User login with JWT
-- ✅ Logout
-- ✅ Get current user
-- ✅ Password hashing with BCrypt
+- [x] User registration
+- [x] User login with JWT
+- [x] Logout
+- [x] Get current user
+- [x] Password hashing with BCrypt
 
 ### Authorization
-- ✅ Role-based access control (USER, ADMIN)
-- ✅ Protected endpoints
-- ✅ Method-level security with @PreAuthorize
+- [x] Role-based access control (USER, ADMIN)
+- [x] Protected endpoints
+- [x] Method-level security with @PreAuthorize
 
 ### Additional Features (Part B - Homework)
-- ✅ Change password
-- ✅ Forgot password / Reset password
-- ✅ User profile management
-- ✅ Admin user management
-- ✅ Refresh token
+- [x] Change password
+- [x] Forgot password / Reset password
+- [x] User profile management
+- [x] Admin user management
+- [x] Refresh token
 - [ ] Email verification (Bonus)
 
 ## API Endpoints
@@ -331,36 +331,61 @@ Action: Retrieve details of the currently logged-in user. URL: GET `http://local
 10. Change Password Success
 Action: Change password for authenticated user. URL: PUT `http://localhost:8080/api/auth/change-password`
 
+<img width="2088" height="1191" alt="image" src="https://github.com/user-attachments/assets/ac62aca0-f6d2-472c-804d-b1a1e86c5288" />
+
 11. Forgot Password
 Action: Request password reset token. URL: POST `http://localhost:8080/api/auth/forgot-password`
+
+<img width="2059" height="1252" alt="image" src="https://github.com/user-attachments/assets/800c38b4-3f79-435b-a891-eafd0050854e" />
 
 12. Reset Password Success
 Action: Reset password using token. URL: POST `http://localhost:8080/api/auth/reset-password`
 
+<img width="2081" height="1158" alt="image" src="https://github.com/user-attachments/assets/f7306bcd-752c-4444-a84a-551908aca660" />
+
 13. View Profile
 Action: View current user's profile. URL: GET `http://localhost:8080/api/users/profile`
+
+<img width="2089" height="1419" alt="image" src="https://github.com/user-attachments/assets/245c8765-c68f-464f-ae7f-ff577b3e2857" />
 
 14. Update Profile
 Action: Update user's full name and email. URL: PUT `http://localhost:8080/api/users/profile`
 
+<img width="2056" height="1374" alt="image" src="https://github.com/user-attachments/assets/c2e2d226-e34e-4c07-b4be-c9dc497248be" />
+
 15. Delete Account (Soft Delete)
 Action: Soft delete user account. URL: DELETE `http://localhost:8080/api/users/account?password=xxx`
+
+<img width="2086" height="1252" alt="image" src="https://github.com/user-attachments/assets/788fdb94-a828-4f5d-83f6-1d5ce0d74498" />
 
 16. Admin: List All Users
 Action: Get all users (Admin only). URL: GET `http://localhost:8080/api/admin/users`
 
+<img width="2088" height="1565" alt="image" src="https://github.com/user-attachments/assets/6ff61790-1450-4197-a02f-d20cd24e4239" />
+
 17. Admin: Update User Role
 Action: Change user's role (Admin only). URL: PUT `http://localhost:8080/api/admin/users/2/role`
+
+<img width="2056" height="1374" alt="image" src="https://github.com/user-attachments/assets/2a14888d-0e06-430e-863b-f694663807be" />
 
 18. Admin: Toggle User Status
 Action: Activate/Deactivate user (Admin only). URL: PATCH `http://localhost:8080/api/admin/users/2/status`
 
+<img width="2060" height="1306" alt="image" src="https://github.com/user-attachments/assets/04ef65c3-f6b2-4bb2-8735-0bae8eac270a" />
+
 19. USER Accessing Admin Endpoint (403 Forbidden)
 Action: Regular user trying to access admin endpoint. URL: GET `http://localhost:8080/api/admin/users`
 
-20. Login with Refresh Token
+<img width="2068" height="1298" alt="image" src="https://github.com/user-attachments/assets/d84f89a8-7968-404a-a75d-589856a05c91" />
+
+20. Refresh Access Token
+Action: Get new access token using refresh token. URL: POST `http://localhost:8080/api/auth/refresh`
+
+<img width="2106" height="1375" alt="image" src="https://github.com/user-attachments/assets/efe0ec12-677e-4989-adc4-4f0331452d7b" />
+
+21. Login with Refresh Token
 Action: Login returns both access token and refresh token. URL: POST `http://localhost:8080/api/auth/login`
 
-21. Refresh Access Token
-Action: Get new access token using refresh token. URL: POST `http://localhost:8080/api/auth/refresh`
+<img width="2090" height="1297" alt="image" src="https://github.com/user-attachments/assets/6cb5cdff-22af-4bab-8a7b-9683e7e8be7e" />
+
 
