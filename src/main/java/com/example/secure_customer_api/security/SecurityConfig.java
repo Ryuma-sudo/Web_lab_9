@@ -21,26 +21,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    
+
     @Autowired
     private CustomUserDetailsService userDetailsService;
-    
+
     @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
-    
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-    
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -48,31 +48,42 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .exceptionHandling(exception -> 
-                exception.authenticationEntryPoint(authenticationEntryPoint)
-            )
-            .sessionManagement(session -> 
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/customers/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/customers/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasRole("ADMIN")
-                // All other requests need authentication
-                .anyRequest().authenticated()
-            );
-        
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // Public endpoints - Authentication
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/api/auth/forgot-password").permitAll()
+                        .requestMatchers("/api/auth/reset-password").permitAll()
+                        .requestMatchers("/api/auth/refresh").permitAll()
+
+                        // Protected auth endpoints
+                        .requestMatchers("/api/auth/**").authenticated()
+
+                        // Customer endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/customers/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/customers/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasRole("ADMIN")
+
+                        // User profile endpoints - require authentication
+                        .requestMatchers("/api/users/**").authenticated()
+
+                        // Admin endpoints - require ADMIN role (also enforced by @PreAuthorize)
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // All other requests need authentication
+                        .anyRequest().authenticated());
+
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        
+
         return http.build();
     }
 }

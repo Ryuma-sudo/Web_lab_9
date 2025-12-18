@@ -1,0 +1,631 @@
+{
+	"info": {
+		"_postman_id": "secure-customer-api-collection",
+		"name": "Secure Customer API - Lab 9",
+		"description": "Complete API collection for Lab 9: Spring Security & JWT Authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
+		},
+		{
+			"key": "resetToken",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "1.1 Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"password123\",\n    \"email\": \"testuser@example.com\",\n    \"fullName\": \"Test User\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Register a new user account"
+					}
+				},
+				{
+					"name": "1.2 Login (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('accessToken', jsonData.token);",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Login as admin user"
+					}
+				},
+				{
+					"name": "1.3 Login (User - John)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('accessToken', jsonData.token);",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"john\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Login as regular user John"
+					}
+				},
+				{
+					"name": "1.4 Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "me"]
+						},
+						"description": "Get details of currently logged in user"
+					}
+				},
+				{
+					"name": "1.5 Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "logout"]
+						},
+						"description": "Logout - reminder to remove token client-side"
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Password Management (Exercise 6)",
+			"item": [
+				{
+					"name": "2.1 Change Password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currentPassword\": \"password123\",\n    \"newPassword\": \"newpassword123\",\n    \"confirmPassword\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/change-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "change-password"]
+						},
+						"description": "Change password for authenticated user"
+					}
+				},
+				{
+					"name": "2.2 Forgot Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.resetToken) {",
+									"    pm.collectionVariables.set('resetToken', jsonData.resetToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/forgot-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "forgot-password"]
+						},
+						"description": "Request password reset token"
+					}
+				},
+				{
+					"name": "2.3 Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{resetToken}}\",\n    \"newPassword\": \"password123\",\n    \"confirmPassword\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/reset-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "reset-password"]
+						},
+						"description": "Reset password using token from forgot-password"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. User Profile (Exercise 7)",
+			"item": [
+				{
+					"name": "3.1 View Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "profile"]
+						},
+						"description": "View current user's profile"
+					}
+				},
+				{
+					"name": "3.2 Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"John Updated\",\n    \"email\": \"john.updated@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "profile"]
+						},
+						"description": "Update user's full name and email"
+					}
+				},
+				{
+					"name": "3.3 Delete Account",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/account?password=password123",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "account"],
+							"query": [
+								{
+									"key": "password",
+									"value": "password123"
+								}
+							]
+						},
+						"description": "Soft delete user account (requires password)"
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Admin (Exercise 8)",
+			"item": [
+				{
+					"name": "4.1 List All Users (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users"]
+						},
+						"description": "Get all users - Admin only"
+					}
+				},
+				{
+					"name": "4.2 Update User Role (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/2/role",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users", "2", "role"]
+						},
+						"description": "Update user's role - Admin only"
+					}
+				},
+				{
+					"name": "4.3 Toggle User Status (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/2/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users", "2", "status"]
+						},
+						"description": "Toggle user active status - Admin only"
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Refresh Token (Exercise 9)",
+			"item": [
+				{
+					"name": "5.1 Refresh Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('accessToken', jsonData.token);",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/refresh",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "refresh"]
+						},
+						"description": "Get new access token using refresh token"
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Customer Management",
+			"item": [
+				{
+					"name": "6.1 Get All Customers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers"]
+						},
+						"description": "Get all customers - requires authentication"
+					}
+				},
+				{
+					"name": "6.2 Get Customer by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers", "1"]
+						},
+						"description": "Get customer by ID - requires authentication"
+					}
+				},
+				{
+					"name": "6.3 Create Customer (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerCode\": \"C100\",\n    \"fullName\": \"New Customer\",\n    \"phone\": \"0123456789\",\n    \"email\": \"newcustomer@example.com\",\n    \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/customers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers"]
+						},
+						"description": "Create new customer - Admin only"
+					}
+				},
+				{
+					"name": "6.4 Update Customer (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Updated Customer\",\n    \"phone\": \"0987654321\",\n    \"email\": \"updated@example.com\",\n    \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers", "1"]
+						},
+						"description": "Update customer - Admin only"
+					}
+				},
+				{
+					"name": "6.5 Delete Customer (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers", "1"]
+						},
+						"description": "Delete customer - Admin only"
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Error Cases",
+			"item": [
+				{
+					"name": "7.1 Access Without Token (401)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers"]
+						},
+						"description": "Access protected endpoint without token - should return 401"
+					}
+				},
+				{
+					"name": "7.2 USER Delete Customer (403)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"description": "Use a USER token, not ADMIN"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers", "1"]
+						},
+						"description": "USER trying to delete customer - should return 403"
+					}
+				},
+				{
+					"name": "7.3 USER Access Admin Endpoint (403)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"description": "Use a USER token, not ADMIN"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users"]
+						},
+						"description": "USER trying to access admin endpoint - should return 403"
+					}
+				},
+				{
+					"name": "7.4 Invalid Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"wrongpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Login with wrong password - should return 401"
+					}
+				}
+			]
+		}
+	]
+}

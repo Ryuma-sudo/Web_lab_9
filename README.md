@@ -8,201 +8,288 @@
 ## Features Implemented
 
 ### Authentication
-- [x] User registration
-- [x] User login with JWT
-- [x] Logout
-- [x] Get current user
-- [x] Password hashing with BCrypt
+- ✅ User registration
+- ✅ User login with JWT
+- ✅ Logout
+- ✅ Get current user
+- ✅ Password hashing with BCrypt
 
 ### Authorization
-- [x] Role-based access control (USER, ADMIN)
-- [x] Protected endpoints
-- [x] Method-level security with @PreAuthorize
+- ✅ Role-based access control (USER, ADMIN)
+- ✅ Protected endpoints
+- ✅ Method-level security with @PreAuthorize
 
-### Additional Features
-- [ ] Change password
-- [ ] Forgot password / Reset password
-- [ ] User profile management
-- [ ] Admin user management
-- [ ] Refresh token
+### Additional Features (Part B - Homework)
+- ✅ Change password
+- ✅ Forgot password / Reset password
+- ✅ User profile management
+- ✅ Admin user management
+- ✅ Refresh token
 - [ ] Email verification (Bonus)
 
 ## API Endpoints
 
 ### Public Endpoints
-- POST /api/auth/register
-- POST /api/auth/login
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login and get JWT tokens |
+| POST | `/api/auth/forgot-password` | Request password reset token |
+| POST | `/api/auth/reset-password` | Reset password with token |
+| POST | `/api/auth/refresh` | Refresh access token |
 
 ### Protected Endpoints (Authenticated)
-- GET /api/auth/me
-- POST /api/auth/logout
-- GET /api/customers
-- GET /api/customers/{id}
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/auth/me` | Get current user info |
+| POST | `/api/auth/logout` | Logout user |
+| PUT | `/api/auth/change-password` | Change password |
+| GET | `/api/customers` | Get all customers |
+| GET | `/api/customers/{id}` | Get customer by ID |
+| GET | `/api/users/profile` | Get user profile |
+| PUT | `/api/users/profile` | Update user profile |
+| DELETE | `/api/users/account` | Delete user account (soft delete) |
 
 ### Admin Only Endpoints
-- POST /api/customers
-- PUT /api/customers/{id}
-- DELETE /api/customers/{id}
-- GET /api/admin/users
-- PUT /api/admin/users/{id}/role
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/customers` | Create new customer |
+| PUT | `/api/customers/{id}` | Update customer |
+| DELETE | `/api/customers/{id}` | Delete customer |
+| GET | `/api/admin/users` | List all users |
+| PUT | `/api/admin/users/{id}/role` | Update user role |
+| PATCH | `/api/admin/users/{id}/status` | Toggle user active status |
 
 ## Test Users
 | Username | Password | Role |
 |----------|----------|------|
 | admin | password123 | ADMIN |
-| duke | password123 | USER |
+| john | password123 | USER |
+| jane | password123 | USER |
 
 ## How to Run
 1. Create database: `customer_management`
 2. Run SQL scripts to create tables
 3. Update `application.properties` with your MySQL credentials
-4. Run: `mvn spring-boot:run`
-5. Test with Thunder Client using provided collection
+4. Run: `.\mvnw.cmd spring-boot:run`
+5. Test with Thunder Client/Postman using provided collection
 
 ## Testing
-Import Postman collection: `Secure_Customer_API.postman_collection.json`
+Import Postman collection: `postman/Secure_Customer_API.postman_collection.json`
 
 All endpoints tested and working.
 
 ## Security
 - Passwords hashed with BCrypt
-- JWT tokens with 24-hour expiration
+- JWT access tokens with 24-hour expiration
+- Refresh tokens with 7-day expiration
 - Stateless authentication
 - CORS enabled for frontend
 - Protected endpoints with Spring Security
+- Role-based access control with @PreAuthorize
 
-### 1. User Registration FlowThis flow handles the creation of a new user account with encrypted credentials.
+---
 
-1. *HTTP Request*: Client sends `POST http://localhost:8080/api/auth/register` with user details (username, password, roles).
-2. *Controller*: `AuthController.registerUser(@RequestBody RegisterRequestDto)` receives the payload.
-3. *Validation*: Service checks if the username or email already exists in the database.
-4. *Security*: `PasswordEncoder.encode()` (BCrypt) is called to hash the raw password.
-5. *Persistence*: `UserRepository.save()` persists the new `User` entity with the hashed password.
-6. *Response*: Returns `201 Created` with a success message.
+## API Documentation
 
-*Testing:*
-Method: `POST`
-URL: `http://localhost:8080/api/auth/register`
+### 1. User Registration
+**Method:** `POST`  
+**URL:** `http://localhost:8080/api/auth/register`
 
 **Request Body:**
-
 ```json
 {
-    "username": "researcher_01",
-    "password": "StrongPassword123!",
-    "email": "researcher@lab.edu",
-    "role": "ROLE_USER"
+    "username": "newuser",
+    "password": "password123",
+    "email": "newuser@example.com",
+    "fullName": "New User"
 }
-
 ```
 
 **Expected Response (201 Created):**
-
 ```json
 {
-    "message": "User registered successfully",
-    "userId": 42,
-    "timestamp": "2025-11-21T10:05:00"
+    "id": 4,
+    "username": "newuser",
+    "email": "newuser@example.com",
+    "fullName": "New User",
+    "role": "USER",
+    "isActive": true,
+    "createdAt": "2025-12-18T22:30:00"
 }
-
 ```
 
 ---
 
-### 2. User Login FlowThis flow authenticates credentials and issues a JWT for session management.
-
-1. *HTTP Request*: Client sends `POST http://localhost:8080/api/auth/login` with credentials.
-2. *Controller*: `AuthController.login(@RequestBody LoginRequestDto)` receives the request.
-3. *Authentication*: `AuthenticationManager.authenticate()` is invoked. It delegates to `DaoAuthenticationProvider`.
-4. *Verification*: `UserDetailsService.loadUserByUsername()` fetches the user; `PasswordEncoder.matches()` compares the raw password with the stored hash.
-5. *Token Generation*: Upon successful verification, `JwtTokenProvider.generateToken(authentication)` creates a signed JWT containing claims (sub, iat, exp, roles).
-6. *Response*: Returns `200 OK` containing the Bearer token.
-
-*Testing:*
-Method: `POST`
-URL: `http://localhost:8080/api/auth/login`
+### 2. User Login
+**Method:** `POST`  
+**URL:** `http://localhost:8080/api/auth/login`
 
 **Request Body:**
-
 ```json
 {
-    "username": "researcher_01",
-    "password": "StrongPassword123!"
+    "username": "admin",
+    "password": "password123"
 }
-
 ```
 
 **Expected Response (200 OK):**
-
 ```json
 {
-    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZXNlYXJ...",
-    "tokenType": "Bearer",
-    "expiresIn": 3600
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "type": "Bearer",
+    "refreshToken": "550e8400-e29b-41d4-a716-446655440000",
+    "username": "admin",
+    "email": "admin@example.com",
+    "role": "ADMIN"
 }
-
 ```
 
 ---
 
-### 3. Protected Endpoint Flow (JWT Filter)This flow demonstrates how the application validates identity before processing a secured request.
+### 3. Change Password
+**Method:** `PUT`  
+**URL:** `http://localhost:8080/api/auth/change-password`  
+**Header:** `Authorization: Bearer <token>`
 
-1. *HTTP Request*: Client sends `GET http://localhost:8080/api/customers` with header `Authorization: Bearer <token>`.
-2. *Filter Chain*: `JwtAuthenticationFilter.doFilterInternal()` intercepts the request before it reaches the Controller.
-3. *Token Extraction*: Filter parses the JWT from the Authorization header.
-4. *Validation*: `JwtTokenProvider.validateToken()` checks signature integrity and expiration.
-5. *Context Setup*: `UserDetailsService` loads user details; `SecurityContextHolder.getContext().setAuthentication(authToken)` sets the user as authenticated for this thread.
-6. *Controller Execution*: Request proceeds to `CustomerRestController` only if the context is valid.
-
-*Testing:*
-Method: `GET`
-URL: `http://localhost:8080/api/customers`
-Header: `Authorization: Bearer eyJhbGci...`
+**Request Body:**
+```json
+{
+    "currentPassword": "password123",
+    "newPassword": "newpassword123",
+    "confirmPassword": "newpassword123"
+}
+```
 
 **Expected Response (200 OK):**
+```json
+{
+    "message": "Password changed successfully"
+}
+```
 
+---
+
+### 4. Forgot Password
+**Method:** `POST`  
+**URL:** `http://localhost:8080/api/auth/forgot-password`
+
+**Request Body:**
+```json
+{
+    "email": "john@example.com"
+}
+```
+
+**Expected Response (200 OK):**
+```json
+{
+    "message": "Password reset token generated. In production, this would be sent via email.",
+    "resetToken": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+---
+
+### 5. Reset Password
+**Method:** `POST`  
+**URL:** `http://localhost:8080/api/auth/reset-password`
+
+**Request Body:**
+```json
+{
+    "token": "<reset-token-from-forgot-password>",
+    "newPassword": "newpassword123",
+    "confirmPassword": "newpassword123"
+}
+```
+
+**Expected Response (200 OK):**
+```json
+{
+    "message": "Password reset successfully"
+}
+```
+
+---
+
+### 6. Refresh Access Token
+**Method:** `POST`  
+**URL:** `http://localhost:8080/api/auth/refresh`
+
+**Request Body:**
+```json
+{
+    "refreshToken": "<refresh-token-from-login>"
+}
+```
+
+**Expected Response (200 OK):**
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "type": "Bearer",
+    "refreshToken": "new-refresh-token",
+    "username": "admin",
+    "email": "admin@example.com",
+    "role": "ADMIN"
+}
+```
+
+---
+
+### 7. Update Profile
+**Method:** `PUT`  
+**URL:** `http://localhost:8080/api/users/profile`  
+**Header:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+    "fullName": "John Updated",
+    "email": "john.updated@example.com"
+}
+```
+
+---
+
+### 8. Admin: List All Users
+**Method:** `GET`  
+**URL:** `http://localhost:8080/api/admin/users`  
+**Header:** `Authorization: Bearer <admin-token>`
+
+**Expected Response (200 OK):**
 ```json
 [
     {
         "id": 1,
-        "customerCode": "C001",
-        "fullName": "John Doe",
-        "status": "ACTIVE"
-    }
+        "username": "admin",
+        "email": "admin@example.com",
+        "fullName": "Admin User",
+        "role": "ADMIN",
+        "isActive": true
+    },
+    ...
 ]
-
 ```
 
 ---
 
-### 4. Authorization Flow (RBAC)This flow enforces role-based restrictions (e.g., only ADMINs can delete customers).
+### 9. Admin: Update User Role
+**Method:** `PUT`  
+**URL:** `http://localhost:8080/api/admin/users/2/role`  
+**Header:** `Authorization: Bearer <admin-token>`
 
-1. *HTTP Request*: Client (with ROLE_USER) sends `DELETE http://localhost:8080/api/customers/1`.
-2. *Security Filter*: `JwtAuthenticationFilter` authenticates the user successfully.
-3. *Method Security*: Spring Security's `AuthorizationManager` (or AOP for `@PreAuthorize`) intercepts the Controller call.
-4. *Role Check*: It inspects the `Authentication` object in the SecurityContext against the required authority (e.g., `hasRole('ADMIN')`).
-5. *Decision*:
-* *If Role Matches*: Execution passes to `CustomerRestController.deleteCustomer()`.
-* *If Role Mismatch*: Throws `AccessDeniedException`.
-6. *Response*: Global Exception Handler catches the exception and returns `403 Forbidden`.
-
-*Testing (As ROLE_USER):*
-Method: `DELETE`
-URL: `http://localhost:8080/api/customers/1`
-
-**Expected Response (403 Forbidden):**
-
+**Request Body:**
 ```json
 {
-    "status": 403,
-    "error": "Forbidden",
-    "message": "Access Denied: You do not have permission to access this resource",
-    "path": "/api/customers/1"
+    "role": "ADMIN"
 }
-
 ```
 
-### 5. Test screenshot
+---
+
+## Test Screenshots
 
 1. Registration Success
 Action: Register a new user account. URL: POST `http://localhost:8080/api/auth/register`
@@ -240,3 +327,40 @@ Action: Logged in as ROLE_ADMIN and delete a customer. URL: DELETE `http://local
 Action: Retrieve details of the currently logged-in user. URL: GET `http://localhost:8080/api/auth/me`
 
 <img width="2981" height="646" alt="image" src="https://github.com/user-attachments/assets/83a3523e-3871-4a0b-a558-d2538d53b7a6" />
+
+10. Change Password Success
+Action: Change password for authenticated user. URL: PUT `http://localhost:8080/api/auth/change-password`
+
+11. Forgot Password
+Action: Request password reset token. URL: POST `http://localhost:8080/api/auth/forgot-password`
+
+12. Reset Password Success
+Action: Reset password using token. URL: POST `http://localhost:8080/api/auth/reset-password`
+
+13. View Profile
+Action: View current user's profile. URL: GET `http://localhost:8080/api/users/profile`
+
+14. Update Profile
+Action: Update user's full name and email. URL: PUT `http://localhost:8080/api/users/profile`
+
+15. Delete Account (Soft Delete)
+Action: Soft delete user account. URL: DELETE `http://localhost:8080/api/users/account?password=xxx`
+
+16. Admin: List All Users
+Action: Get all users (Admin only). URL: GET `http://localhost:8080/api/admin/users`
+
+17. Admin: Update User Role
+Action: Change user's role (Admin only). URL: PUT `http://localhost:8080/api/admin/users/2/role`
+
+18. Admin: Toggle User Status
+Action: Activate/Deactivate user (Admin only). URL: PATCH `http://localhost:8080/api/admin/users/2/status`
+
+19. USER Accessing Admin Endpoint (403 Forbidden)
+Action: Regular user trying to access admin endpoint. URL: GET `http://localhost:8080/api/admin/users`
+
+20. Login with Refresh Token
+Action: Login returns both access token and refresh token. URL: POST `http://localhost:8080/api/auth/login`
+
+21. Refresh Access Token
+Action: Get new access token using refresh token. URL: POST `http://localhost:8080/api/auth/refresh`
+
